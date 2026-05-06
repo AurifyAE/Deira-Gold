@@ -222,8 +222,18 @@ function TvScreen() {
           }}>
 
 
-          <CommodityTable commodities={commodities} />
-          <MintedBars mintedBars={mintedBars} />
+          <CommodityTable
+            title="Commodity"
+            commodities={commodities.filter(
+              (c) => (c.group || "").toLowerCase() === "commodity"
+            )}
+          />
+          <CommodityTable
+            title="Swiss Bars"
+            commodities={commodities.filter(
+              (c) => (c.group || "").toLowerCase() === "group1"
+            )}
+          />
           <PoweredByAurify />
 
         </Grid>

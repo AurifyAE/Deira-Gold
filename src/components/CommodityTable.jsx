@@ -33,7 +33,7 @@ const rowStyle = {
   borderBottom: "1px solid rgba(255,255,255,0.12)",
 };
 
-const CommodityTable = ({ commodities }) => {
+const CommodityTable = ({ commodities, title }) => {
   const { goldData, silverData } = useSpotRate();
 
   /* -----------------------
@@ -80,24 +80,20 @@ const CommodityTable = ({ commodities }) => {
         const purity = purityFactor(item.purity);
 
         const bid =
-          ((spot.bid / OUNCE) * AED * multiplier * item.unit * purity) +
+          (spot.bid / OUNCE) * AED * multiplier * item.unit * purity +
           (parseFloat(item.buyCharge) || 0) +
           (parseFloat(item.buyPremium) || 0);
 
         const ask =
-          ((spot.ask / OUNCE) * AED * multiplier * item.unit * purity) +
+          (spot.ask / OUNCE) * AED * multiplier * item.unit * purity +
           (parseFloat(item.sellCharge) || 0) +
           (parseFloat(item.sellPremium) || 0);
 
         return {
-          name:
-            item.metal === "Gold Ten TOLA"
-              ? "Gold"
-              : item.metal,
-          purity:
-            item.metal === "Gold Ten TOLA"
-              ? "TEN TOLA"
-              : item.purity,
+          metalName: item.metalName || item.metal_name,
+          name: item.metal === "Gold Ten TOLA" ? "Gold" : item.metal,
+          group: item.group,
+          purity: item.metal === "Gold Ten TOLA" ? "TEN TOLA" : item.purity,
           weight: `${item.unit} ${item.weight}`,
           bid,
           ask,
@@ -116,49 +112,62 @@ const CommodityTable = ({ commodities }) => {
     <Box sx={{ width: "100%", mt: "1vw" }}>
       {/* HEADER */}
       <Box sx={headerStyle}>
-        <Typography fontSize="1.2vw" >
-          Commodity
+        <Typography fontSize="1.2vw">
+          {title ? title : "Commodity"}
         </Typography>
 
-        <Typography fontSize="1.2vw" >
-          Unit
-        </Typography>
+        <Typography fontSize="1.2vw">Unit</Typography>
 
-        <Box display="flex" alignItems="center" justifyContent='center' >
-          <Typography fontSize="1.2vw" margin='0 0.4vw ' >
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Typography fontSize="1.2vw" margin="0 0.4vw ">
             BID
           </Typography>
-          ( <img src={dollarIcon} alt="$" style={{ width: "1.2vw", margin: '0 0.2vw' }} /> )
+          ({" "}
+          <img
+            src={dollarIcon}
+            alt="$"
+            style={{ width: "1.2vw", margin: "0 0.2vw" }}
+          />{" "}
+          )
         </Box>
 
-        <Box display="flex" alignItems="center" justifyContent='center' >
-          <Typography fontSize="1.2vw" margin='0 0.4vw ' >
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Typography fontSize="1.2vw" margin="0 0.4vw ">
             ASK
           </Typography>
-          (<img src={dollarIcon} alt="$" style={{ width: "1.2vw", margin: '0 0.2vw' }} />)
+          (
+          <img
+            src={dollarIcon}
+            alt="$"
+            style={{ width: "1.2vw", margin: "0 0.2vw" }}
+          />
+          )
         </Box>
       </Box>
 
       {/* ROWS */}
-      {data.map((row, i) => (
-        <Box key={i} sx={rowStyle}>
-          <Typography fontSize="1.2vw" >
-             {row.name} {row.purity}
-          </Typography>
+      {data.map(
+        (row, i) => (
+          console.log(row),
+          (
+            <Box key={i} sx={rowStyle}>
+              <Typography fontSize="1.2vw">
+                {row.metalName !== null ? row.metalName : row.name} {row.purity}
+              </Typography>
 
-          <Typography fontSize="1.2vw" >
-            {row.weight}
-          </Typography>
+              <Typography fontSize="1.2vw">{row.weight}</Typography>
 
-          <Typography fontSize="1.2vw" >
-            {formatByDigits(row.bid)}
-          </Typography>
+              <Typography fontSize="1.2vw">
+                {formatByDigits(row.bid)}
+              </Typography>
 
-          <Typography fontSize="1.2vw" >
-            {formatByDigits(row.ask)}
-          </Typography>
-        </Box>
-      ))}
+              <Typography fontSize="1.2vw">
+                {formatByDigits(row.ask)}
+              </Typography>
+            </Box>
+          )
+        ),
+      )}
     </Box>
   );
 };
