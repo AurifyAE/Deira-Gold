@@ -34,3 +34,10 @@ export const fetchTVScreenData = (adminId) => {
 export const fetchScreenSliders = (adminId) => {
     return axiosInstance.get(`/tv-sliders/${adminId}`);
 };
+
+// Fetch minted bars for the given admin (matches backend GET /view-mintedbars/:userName)
+export const fetchMintedBars = (adminId) => {
+
+    
+    return axiosInstance.get(`/view-mintedbars/${adminId}`);
+};
