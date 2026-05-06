@@ -208,4 +208,6 @@ const MintedBars = ({ mintedBars = [], commodities }) => {
   );
 };
 
+
+
 export default MintedBars;
