@@ -2,7 +2,6 @@ import React from "react";
 import { Box, Typography } from "@mui/material";
 import { useSpotRate } from "../context/SpotRateContext";
 
-// optional dollar icon (you said you have it)
 import dollarIcon from "/icons/dirham-icon.svg";
 
 const OUNCE = 31.103;
@@ -33,7 +32,11 @@ const rowStyle = {
   borderBottom: "1px solid rgba(255,255,255,0.12)",
 };
 
-const CommodityTable = ({ commodities, title }) => {
+const CommodityTable = ({
+  commodities,
+  isMintedBar = false,
+  isCommodity = false,
+}) => {
   const { goldData, silverData } = useSpotRate();
 
   /* -----------------------
@@ -90,10 +93,16 @@ const CommodityTable = ({ commodities, title }) => {
           (parseFloat(item.sellPremium) || 0);
 
         return {
-          metalName: item.metalName || item.metal_name,
-          name: item.metal === "Gold Ten TOLA" ? "Gold" : item.metal,
-          group: item.group,
-          purity: item.metal === "Gold Ten TOLA" ? "TEN TOLA" : item.purity,
+          group: item.group, // IMPORTANT
+          name: item.group === "group1" && item.metal_name
+            ? item.metal_name
+            : item.metal === "Gold Ten TOLA"
+              ? "Gold"
+              : item.metal,
+          purity:
+            item.metal === "Gold Ten TOLA"
+              ? "TEN TOLA"
+              : item.purity,
           weight: `${item.unit} ${item.weight}`,
           bid,
           ask,
@@ -105,69 +114,122 @@ const CommodityTable = ({ commodities, title }) => {
   const data = buildTableData();
 
   /* -----------------------
+     FILTER GROUPS
+  ------------------------ */
+
+  const commodityData = data.filter(
+    (item) => item.group === "commodity"
+  );
+
+  const mintedBarData = data.filter(
+    (item) => item.group === "group1"
+  );
+
+  /* -----------------------
+     TABLE COMPONENT
+  ------------------------ */
+
+  const renderTable = (title, rows) => {
+    if (!rows.length) return null;
+
+    return (
+      <Box sx={{ mb: "2vw" }}>
+
+
+        {/* HEADER */}
+        <Box sx={headerStyle}>
+          <Typography fontSize="1.2vw">
+
+            {title == 'Minted Bar' ? 'Minted Bars' : 'Commodity'}
+
+          </Typography>
+
+          <Typography fontSize="1.2vw">
+            Unit
+          </Typography>
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography
+              fontSize="1.2vw"
+              margin="0 0.4vw"
+            >
+              BID
+            </Typography>
+
+            (
+            <img
+              src={dollarIcon}
+              alt="$"
+              style={{
+                width: "1.2vw",
+                margin: "0 0.2vw",
+              }}
+            />
+            )
+          </Box>
+
+          <Box
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <Typography
+              fontSize="1.2vw"
+              margin="0 0.4vw"
+            >
+              ASK
+            </Typography>
+
+            (
+            <img
+              src={dollarIcon}
+              alt="$"
+              style={{
+                width: "1.2vw",
+                margin: "0 0.2vw",
+              }}
+            />
+            )
+          </Box>
+        </Box>
+
+        {/* ROWS */}
+        {rows.map((row, i) => (
+
+          <Box key={i} sx={rowStyle}>
+            <Typography fontSize="1.2vw">
+              {row.name} {row.purity}
+            </Typography>
+
+            <Typography fontSize="1.2vw">
+              {row.weight}
+            </Typography>
+
+            <Typography fontSize="1.2vw">
+              {formatByDigits(row.bid)}
+            </Typography>
+
+            <Typography fontSize="1.2vw">
+              {formatByDigits(row.ask)}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+    );
+  };
+
+  /* -----------------------
      RENDER
   ------------------------ */
 
   return (
     <Box sx={{ width: "100%", mt: "1vw" }}>
-      {/* HEADER */}
-      <Box sx={headerStyle}>
-        <Typography fontSize="1.2vw">
-          {title ? title : "Commodity"}
-        </Typography>
-
-        <Typography fontSize="1.2vw">Unit</Typography>
-
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <Typography fontSize="1.2vw" margin="0 0.4vw ">
-            BID
-          </Typography>
-          ({" "}
-          <img
-            src={dollarIcon}
-            alt="$"
-            style={{ width: "1.2vw", margin: "0 0.2vw" }}
-          />{" "}
-          )
-        </Box>
-
-        <Box display="flex" alignItems="center" justifyContent="center">
-          <Typography fontSize="1.2vw" margin="0 0.4vw ">
-            ASK
-          </Typography>
-          (
-          <img
-            src={dollarIcon}
-            alt="$"
-            style={{ width: "1.2vw", margin: "0 0.2vw" }}
-          />
-          )
-        </Box>
-      </Box>
-
-      {/* ROWS */}
-      {data.map(
-        (row, i) => (
-          console.log(row),
-          (
-            <Box key={i} sx={rowStyle}>
-              <Typography fontSize="1.2vw">
-                {row.metalName !== null ? row.metalName : row.name} {row.purity}
-              </Typography>
-
-              <Typography fontSize="1.2vw">{row.weight}</Typography>
-
-              <Typography fontSize="1.2vw">
-                {formatByDigits(row.bid)}
-              </Typography>
-
-              <Typography fontSize="1.2vw">
-                {formatByDigits(row.ask)}
-              </Typography>
-            </Box>
-          )
-        ),
-      )}
+      {isCommodity && renderTable("Commodity", commodityData)}
+      {isMintedBar && renderTable("Minted Bar", mintedBarData)}
     </Box>
   );
 };

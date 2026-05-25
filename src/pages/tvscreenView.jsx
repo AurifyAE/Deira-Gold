@@ -10,11 +10,10 @@ import {
   fetchNews,
   fetchTVScreenData,
   fetchMintedBars,
-} from "../api/api";
+} from "../api/api";  
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
 import WorldClock from "../components/WorldClock";
-import MintedBars from "../components/MintedBars";
 import GoldKaratRate from "../components/GoldKaratRate";
 import PoweredByAurify from "../components/PoweredByAurify";
 
@@ -192,7 +191,7 @@ function TvScreen() {
           gap='0.5vw'
         >
 
-          <Box className="flex flex-row items-center justify-around ">
+          <Box className="flex flex-row items-center justify-between w-full ">
             <Box
               sx={{
                 height: "auto",
@@ -222,18 +221,8 @@ function TvScreen() {
           }}>
 
 
-          <CommodityTable
-            title="Commodity"
-            commodities={commodities.filter(
-              (c) => (c.group || "").toLowerCase() === "commodity"
-            )}
-          />
-          <CommodityTable
-            title="Swiss Bars"
-            commodities={commodities.filter(
-              (c) => (c.group || "").toLowerCase() === "group1"
-            )}
-          />
+          <CommodityTable commodities={commodities} isCommodity={true} />
+          <CommodityTable commodities={commodities} isMintedBar={true} />
           <PoweredByAurify />
 
         </Grid>
