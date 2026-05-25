@@ -34,3 +34,4 @@ export const fetchTVScreenData = (adminId) => {
 export const fetchScreenSliders = (adminId) => {
     return axiosInstance.get(`/tv-sliders/${adminId}`);
 };
+ 

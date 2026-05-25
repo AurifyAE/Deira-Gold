@@ -78,7 +78,7 @@ const SpotRate = () => {
 
   const PriceBox = ({ label, value, dir }) => (
     <Box textAlign="center" display='flex' alignItems='center' justifyContent='end' gap='1vw'>
-      <Typography sx={{ fontSize: "1.1vw", mb: "0.3vw" }}>
+      <Typography sx={{ fontSize: "1.1vw", mb: "0.3vw" ,flexShrink:'0'}}>
         {label}
       </Typography>
       <Box
@@ -90,6 +90,7 @@ const SpotRate = () => {
           fontWeight: 700,
           border: "1px solid",
           color: "#fff",
+          width: '70%',
           ...getRateStyles(dir),
         }}
       >
@@ -155,7 +156,7 @@ const SpotRate = () => {
   );
 
   return (
-    <Box sx={{ padding: "0vw 1vw", color: "#fff" }}>
+    <Box>
       <MetalCard
         labelIcon={goldLabel}
         img={goldImg}

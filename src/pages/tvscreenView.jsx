@@ -13,7 +13,6 @@ import {
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
 import WorldClock from "../components/WorldClock";
-import MIntedBars from "../components/MIntedBars";
 import GoldKaratRate from "../components/GoldKaratRate";
 import PoweredByAurify from "../components/PoweredByAurify";
 
@@ -30,6 +29,8 @@ function TvScreen() {
   const [silverAskSpread, setSilverAskSpread] = useState("");
   const [symbols, setSymbols] = useState(["GOLD", "SILVER"]);
   const [error, setError] = useState(null);
+
+
 
   const { updateMarketData } = useSpotRate();
 
@@ -181,7 +182,7 @@ function TvScreen() {
           gap='0.5vw'
         >
 
-          <Box className="flex flex-row items-center justify-around ">
+          <Box className="flex flex-row items-center justify-between w-full ">
             <Box
               sx={{
                 height: "auto",
@@ -211,11 +212,14 @@ function TvScreen() {
           }}>
 
 
-          <CommodityTable commodities={commodities} />
-          <MIntedBars commodities={commodities} />
+          <CommodityTable commodities={commodities} isCommodity={true} />
+          <CommodityTable commodities={commodities} isMintedBar={true} />
           <PoweredByAurify />
 
         </Grid>
+
+
+
 
 
 
