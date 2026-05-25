@@ -9,8 +9,7 @@ import {
   fetchServerURL,
   fetchNews,
   fetchTVScreenData,
-  fetchMintedBars,
-} from "../api/api";  
+} from "../api/api";
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
 import WorldClock from "../components/WorldClock";
@@ -24,7 +23,6 @@ function TvScreen() {
   const [news, setNews] = useState([]);
   const [marketData, setMarketData] = useState({});
   const [commodities, setCommodities] = useState([]);
-  const [mintedBars, setMintedBars] = useState([]);
   const [goldBidSpread, setGoldBidSpread] = useState("");
   const [goldAskSpread, setGoldAskSpread] = useState("");
   const [silverBidSpread, setSilverBidSpread] = useState("");
@@ -32,7 +30,7 @@ function TvScreen() {
   const [symbols, setSymbols] = useState(["GOLD", "SILVER"]);
   const [error, setError] = useState(null);
 
-  
+
 
   const { updateMarketData } = useSpotRate();
 
@@ -49,11 +47,10 @@ function TvScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [spotRatesRes, serverURLRes, newsRes, mintedBarsRes] = await Promise.all([
+        const [spotRatesRes, serverURLRes, newsRes] = await Promise.all([
           fetchSpotRates(adminId),
           fetchServerURL(),
           fetchNews(adminId),
-          fetchMintedBars(adminId).catch(() => ({ data: { data: { mintedbars: [] } } })),
         ]);
 
         // Handle Spot Rates
@@ -69,12 +66,6 @@ function TvScreen() {
         setGoldAskSpread(goldAskSpread);
         setSilverBidSpread(silverBidSpread);
         setSilverAskSpread(silverAskSpread);
-
-        // Handle Minted Bars (from admin)
-        const bars = mintedBarsRes?.data?.data?.mintedbars;
-
-        
-        setMintedBars(Array.isArray(bars) ? bars : []);
 
         // Handle Server URL
         const { serverURL } = serverURLRes.data.info;
