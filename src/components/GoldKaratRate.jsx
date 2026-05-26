@@ -1,27 +1,17 @@
 import React from "react";
 import { Box, Typography } from "@mui/material";
-import { useSpotRate } from "../context/SpotRateContext";
 
-const OUNCE = 31.103;
-const AED = 3.674;
-
-const KARAT_PURITY = [
-  { label: "18K Gold (GM)", value: 0.75 },
-  { label: "21K Gold (GM)", value: 0.875 },
-  { label: "22K Gold (GM)", value: 0.916 },
-  { label: "24K Gold (GM)", value: 0.999 },
-];
-
-const GoldKaratRate = () => {
-  const { goldData } = useSpotRate();
-
-  const goldPerGram = (goldData.bid / OUNCE) * AED;
-
-  const format2 = (val) =>
-    val.toLocaleString(undefined, {
+const GoldKaratRate = ({ rates = [] }) => {
+  const formatPrice = (val) =>
+    Number(val || 0).toLocaleString(undefined, {
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
+
+  // Sort using displayOrder from backend
+  const sortedRates = [...rates].sort(
+    (a, b) => (a.displayOrder || 0) - (b.displayOrder || 0)
+  );
 
   return (
     <Box
@@ -32,7 +22,19 @@ const GoldKaratRate = () => {
         color: "#fff",
       }}
     >
-     
+      {/* Empty State */}
+      {!sortedRates.length && (
+        <Typography
+          sx={{
+            textAlign: "center",
+            color: "rgba(255,255,255,0.5)",
+            fontSize: "1vw",
+            padding: "1vw 0",
+          }}
+        >
+          No retail rates available
+        </Typography>
+      )}
 
       {/* GRID */}
       <Box
@@ -42,43 +44,45 @@ const GoldKaratRate = () => {
           gap: "1vw",
         }}
       >
-        {KARAT_PURITY.map((k) => {
-          const price = goldPerGram * k.value;
-
-          return (
-            <Box
-              key={k.label}
+        {sortedRates.map((item, index) => (
+          <Box
+            key={item._id || index}
+            sx={{
+              border: "1px solid rgba(255,255,255,0.15)",
+              borderRadius: "12px",
+              padding: "1vw 0.5vw",
+              textAlign: "center",
+              background:
+                "linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01))",
+            }}
+          >
+            {/* Name */}
+            <Typography
               sx={{
-                border: "1px solid rgba(255,255,255,0.15)",
-                borderRadius: "12px",
-                padding: "1vw 0.5vw",
-                textAlign: "center",
+                fontSize: "1.3vw",
+                fontWeight: 600,
+                mb: "0.4vw",
+                color: "#fff",
               }}
             >
-              <Typography
-                sx={{
-                  fontSize: "1.3vw",
-                  fontWeight: 600,
-                  mb: "0.4vw",
-                }}
-              >
-                {k.label}
-              </Typography>
+              {item.name} (GM)
+            </Typography>
 
-              <Typography
-                sx={{
-                  fontSize: "1.6vw",
-                  fontWeight: 700,
-                }}
-              >
-                {format2(price)}
-              </Typography>
-            </Box>
-          );
-        })}
+            {/* Rate */}
+            <Typography
+              sx={{
+                fontSize: "1.6vw",
+                fontWeight: 700,
+                color: "#fff",
+              }}
+            >
+              {formatPrice(item.rate)}
+            </Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );
 };
 
-export default GoldKaratRate;
+export default React.memo(GoldKaratRate);

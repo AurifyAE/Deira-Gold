@@ -9,6 +9,7 @@ import {
   fetchServerURL,
   fetchNews,
   fetchTVScreenData,
+  fetchRetailGoldRates
 } from "../api/api";
 import io from "socket.io-client";
 import { useSpotRate } from "../context/SpotRateContext";
@@ -29,20 +30,60 @@ function TvScreen() {
   const [silverAskSpread, setSilverAskSpread] = useState("");
   const [symbols, setSymbols] = useState(["GOLD", "SILVER"]);
   const [error, setError] = useState(null);
-
+  const [retailRates, setRetailRates] = useState([]);
 
 
   const { updateMarketData } = useSpotRate();
 
   const adminId = import.meta.env.VITE_APP_ADMIN_ID;
 
-  updateMarketData(
+  // updateMarketData(
+  //   marketData,
+  //   goldBidSpread,
+  //   goldAskSpread,
+  //   silverBidSpread,
+  //   silverAskSpread
+  // );
+  
+  useEffect(() => {
+    updateMarketData(
+      marketData,
+      goldBidSpread,
+      goldAskSpread,
+      silverBidSpread,
+      silverAskSpread
+    );
+  }, [
     marketData,
     goldBidSpread,
     goldAskSpread,
     silverBidSpread,
-    silverAskSpread
-  );
+    silverAskSpread,
+  ]);
+
+  useEffect(() => {
+    const fetchRetailRatesLive = async () => {
+      try {
+        const retailRatesRes = await fetchRetailGoldRates(adminId);
+
+        if (retailRatesRes.data.success) {
+          setRetailRates(retailRatesRes.data.rates || []);
+        }
+      } catch (error) {
+        console.log("Retail rate fetch error:", error);
+      }
+    };
+
+    // Initial fetch
+    fetchRetailRatesLive();
+
+    // Auto refresh every 5 seconds
+    const interval = setInterval(() => {
+      fetchRetailRatesLive();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [adminId]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,7 +93,6 @@ function TvScreen() {
           fetchServerURL(),
           fetchNews(adminId),
         ]);
-
         // Handle Spot Rates
         const {
           commodities,
@@ -197,8 +237,7 @@ function TvScreen() {
 
           </Box>
           <SpotRate />
-          <GoldKaratRate />
-
+          <GoldKaratRate rates={retailRates} />
 
         </Grid>
 
