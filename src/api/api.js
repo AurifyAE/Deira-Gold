@@ -35,3 +35,7 @@ export const fetchScreenSliders = (adminId) => {
     return axiosInstance.get(`/tv-sliders/${adminId}`);
 };
  
+// Fetch spot rates for the given adminId
+export const fetchRetailGoldRates = (adminId) => {
+    return axiosInstance.get(`/retail-gold-rate/${adminId}`);
+};
