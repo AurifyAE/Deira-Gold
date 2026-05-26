@@ -88,7 +88,7 @@ function TvScreen() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [spotRatesRes, serverURLRes, newsRes, retailRatesRes] = await Promise.all([
+        const [spotRatesRes, serverURLRes, newsRes] = await Promise.all([
           fetchSpotRates(adminId),
           fetchServerURL(),
           fetchNews(adminId),
