@@ -78,7 +78,7 @@ const SpotRate = () => {
 
   const PriceBox = ({ label, value, dir }) => (
     <Box textAlign="center" display='flex' alignItems='center' justifyContent='end' gap='1vw'>
-      <Typography sx={{ fontSize: "1.1vw", mb: "0.3vw" ,flexShrink:'0'}}>
+      <Typography sx={{ fontSize: "1.1vw", mb: "0.3vw", flexShrink: '0' }}>
         {label}
       </Typography>
       <Box
@@ -105,8 +105,21 @@ const SpotRate = () => {
         position: "relative",
         background: "linear-gradient(180deg,#1a1a1a,#0d0d0d)",
         borderRadius: "18px",
-        padding: "1vw",
+        padding: "1.5vw 1vw",
+        border: "1px solid rgba(212,175,55,0.18)",
+        overflow: "hidden",
+
         mb: "1vw",
+        "&::before": {
+          content: '""',
+          position: "absolute",
+          top: 0,
+          left: 0,
+          right: 0,
+          height: "1px",
+          background:
+            "linear-gradient(90deg, transparent, rgba(255, 219, 101, 0.48), transparent)",
+        },
       }}
     >
 
