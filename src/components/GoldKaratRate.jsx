@@ -5,7 +5,7 @@ const GoldKaratRate = ({ rates = [] }) => {
   const formatPrice = (val) =>
     Number(val || 0).toLocaleString(undefined, {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      maximumFractionDigits: 3,
     });
 
   // Sort using displayOrder from backend
