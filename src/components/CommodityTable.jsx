@@ -94,15 +94,13 @@ const CommodityTable = ({
 
         return {
           group: item.group, // IMPORTANT
-          name: item.group === "group1" && item.metal_name
-            ? item.metal_name
-            : item.metal === "Gold Ten TOLA"
-              ? "Gold"
-              : item.metal,
-          purity:
-            item.metal === "Gold Ten TOLA"
-              ? "TEN TOLA"
-              : item.purity,
+          name:
+            item.group === "group1" && item.metal_name
+              ? item.metal_name
+              : item.metal === "Gold Ten TOLA"
+                ? "Gold"
+                : item.metal,
+          purity: item.metal === "Gold Ten TOLA" ? "TEN TOLA" : item.purity,
           weight: `${item.unit} ${item.weight}`,
           bid,
           ask,
@@ -117,13 +115,9 @@ const CommodityTable = ({
      FILTER GROUPS
   ------------------------ */
 
-  const commodityData = data.filter(
-    (item) => item.group === "commodity"
-  );
+  const commodityData = data.filter((item) => item.group === "commodity");
 
-  const mintedBarData = data.filter(
-    (item) => item.group === "group1"
-  );
+  const mintedBarData = data.filter((item) => item.group === "group1");
 
   /* -----------------------
      TABLE COMPONENT
@@ -134,32 +128,18 @@ const CommodityTable = ({
 
     return (
       <Box sx={{ mb: "2vw" }}>
-
-
         {/* HEADER */}
         <Box sx={headerStyle}>
           <Typography fontSize="1.2vw">
-
-            {title == 'Minted Bar' ? 'Minted Bars' : 'Commodity'}
-
+            {title == "Minted Bar" ? "Minted Bars" : "Commodity"}
           </Typography>
 
-          <Typography fontSize="1.2vw">
-            Unit
-          </Typography>
+          <Typography fontSize="1.2vw">Unit</Typography>
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography
-              fontSize="1.2vw"
-              margin="0 0.4vw"
-            >
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography fontSize="1.2vw" margin="0 0.4vw">
               BID
             </Typography>
-
             (
             <img
               src={dollarIcon}
@@ -172,18 +152,10 @@ const CommodityTable = ({
             )
           </Box>
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography
-              fontSize="1.2vw"
-              margin="0 0.4vw"
-            >
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography fontSize="1.2vw" margin="0 0.4vw">
               ASK
             </Typography>
-
             (
             <img
               src={dollarIcon}
@@ -199,23 +171,19 @@ const CommodityTable = ({
 
         {/* ROWS */}
         {rows.map((row, i) => (
-
           <Box key={i} sx={rowStyle}>
-            <Typography fontSize="1.2vw">
-              {row.name} {row.purity}
+            <Typography fontSize="1.2vw" display="flex" alignItems="center" justifyContent={'center'}  gap=".5vw">
+              {row.name}
+              <Typography fontSize=".9vw" fontStyle={"oblique"} color="#e3b45f">
+                {row.purity}
+              </Typography>
             </Typography>
 
-            <Typography fontSize="1.2vw">
-              {row.weight}
-            </Typography>
+            <Typography fontSize="1.2vw">{row.weight}</Typography>
 
-            <Typography fontSize="1.2vw">
-              {formatByDigits(row.bid)}
-            </Typography>
+            <Typography fontSize="1.2vw">{formatByDigits(row.bid)}</Typography>
 
-            <Typography fontSize="1.2vw">
-              {formatByDigits(row.ask)}
-            </Typography>
+            <Typography fontSize="1.2vw">{formatByDigits(row.ask)}</Typography>
           </Box>
         ))}
       </Box>
