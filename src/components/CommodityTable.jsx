@@ -81,28 +81,41 @@ const CommodityTable = ({
 
         const multiplier = UNIT_MULTIPLIER[item.weight] || 1;
         const purity = purityFactor(item.purity);
+        const unit = parseFloat(item.unit) || 0;
+        
+        const weightValue = multiplier * unit;
+
+        const spotBid = parseFloat(spot.bid) || 0;
+        const spotAsk = parseFloat(spot.ask) || 0;
+        
+        const buyPremium = parseFloat(item.buyPremium) || 0;
+        const buyCharge = parseFloat(item.buyCharge) || 0;
+        const sellPremium = parseFloat(item.sellPremium) || 0;
+        const sellCharge = parseFloat(item.sellCharge) || 0;
 
         const bid =
-          (spot.bid / OUNCE) * AED * multiplier * item.unit * purity +
-          (parseFloat(item.buyCharge) || 0) +
-          (parseFloat(item.buyPremium) || 0);
+          ((spotBid + buyPremium) / OUNCE) *
+            AED *
+            weightValue *
+            purity +
+          buyCharge;
 
         const ask =
-          (spot.ask / OUNCE) * AED * multiplier * item.unit * purity +
-          (parseFloat(item.sellCharge) || 0) +
-          (parseFloat(item.sellPremium) || 0);
+          ((spotAsk + sellPremium) / OUNCE) *
+            AED *
+            weightValue *
+            purity +
+          sellCharge;
 
         return {
           group: item.group, // IMPORTANT
-          name: item.group === "group1" && item.metal_name
-            ? item.metal_name
-            : item.metal === "Gold Ten TOLA"
-              ? "Gold"
-              : item.metal,
-          purity:
-            item.metal === "Gold Ten TOLA"
-              ? "TEN TOLA"
-              : item.purity,
+          name:
+            item.group === "group1" && item.metal_name
+              ? item.metal_name
+              : item.metal === "Gold Ten TOLA"
+                ? "Gold"
+                : item.metal,
+          purity: item.metal === "Gold Ten TOLA" ? "TEN TOLA" : item.purity,
           weight: `${item.unit} ${item.weight}`,
           bid,
           ask,
@@ -117,13 +130,9 @@ const CommodityTable = ({
      FILTER GROUPS
   ------------------------ */
 
-  const commodityData = data.filter(
-    (item) => item.group === "commodity"
-  );
+  const commodityData = data.filter((item) => item.group === "commodity");
 
-  const mintedBarData = data.filter(
-    (item) => item.group === "group1"
-  );
+  const mintedBarData = data.filter((item) => item.group === "group1");
 
   /* -----------------------
      TABLE COMPONENT
@@ -134,32 +143,18 @@ const CommodityTable = ({
 
     return (
       <Box sx={{ mb: "2vw" }}>
-
-
         {/* HEADER */}
         <Box sx={headerStyle}>
           <Typography fontSize="1.2vw">
-
-            {title == 'Minted Bar' ? 'Minted Bars' : 'Commodity'}
-
+            {title == "Minted Bar" ? "Minted Bars" : "Commodity"}
           </Typography>
 
-          <Typography fontSize="1.2vw">
-            Unit
-          </Typography>
+          <Typography fontSize="1.2vw">Unit</Typography>
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography
-              fontSize="1.2vw"
-              margin="0 0.4vw"
-            >
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography fontSize="1.2vw" margin="0 0.4vw">
               BID
             </Typography>
-
             (
             <img
               src={dollarIcon}
@@ -172,18 +167,10 @@ const CommodityTable = ({
             )
           </Box>
 
-          <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="center"
-          >
-            <Typography
-              fontSize="1.2vw"
-              margin="0 0.4vw"
-            >
+          <Box display="flex" alignItems="center" justifyContent="center">
+            <Typography fontSize="1.2vw" margin="0 0.4vw">
               ASK
             </Typography>
-
             (
             <img
               src={dollarIcon}
@@ -199,23 +186,19 @@ const CommodityTable = ({
 
         {/* ROWS */}
         {rows.map((row, i) => (
-
           <Box key={i} sx={rowStyle}>
-            <Typography fontSize="1.2vw">
-              {row.name} {row.purity}
+            <Typography fontSize="1.2vw" display="flex" alignItems="center" justifyContent={'center'}  gap=".5vw">
+              {row.name}
+              <Typography fontSize=".9vw" fontStyle={"oblique"} color="#e3b45f">
+                {row.purity}
+              </Typography>
             </Typography>
 
-            <Typography fontSize="1.2vw">
-              {row.weight}
-            </Typography>
+            <Typography fontSize="1.2vw">{row.weight}</Typography>
 
-            <Typography fontSize="1.2vw">
-              {formatByDigits(row.bid)}
-            </Typography>
+            <Typography fontSize="1.2vw">{formatByDigits(row.bid)}</Typography>
 
-            <Typography fontSize="1.2vw">
-              {formatByDigits(row.ask)}
-            </Typography>
+            <Typography fontSize="1.2vw">{formatByDigits(row.ask)}</Typography>
           </Box>
         ))}
       </Box>
