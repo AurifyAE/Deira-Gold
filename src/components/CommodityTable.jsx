@@ -81,16 +81,31 @@ const CommodityTable = ({
 
         const multiplier = UNIT_MULTIPLIER[item.weight] || 1;
         const purity = purityFactor(item.purity);
+        const unit = parseFloat(item.unit) || 0;
+        
+        const weightValue = multiplier * unit;
+
+        const spotBid = parseFloat(spot.bid) || 0;
+        const spotAsk = parseFloat(spot.ask) || 0;
+        
+        const buyPremium = parseFloat(item.buyPremium) || 0;
+        const buyCharge = parseFloat(item.buyCharge) || 0;
+        const sellPremium = parseFloat(item.sellPremium) || 0;
+        const sellCharge = parseFloat(item.sellCharge) || 0;
 
         const bid =
-          (spot.bid / OUNCE) * AED * multiplier * item.unit * purity +
-          (parseFloat(item.buyCharge) || 0) +
-          (parseFloat(item.buyPremium) || 0);
+          ((spotBid + buyPremium) / OUNCE) *
+            AED *
+            weightValue *
+            purity +
+          buyCharge;
 
         const ask =
-          (spot.ask / OUNCE) * AED * multiplier * item.unit * purity +
-          (parseFloat(item.sellCharge) || 0) +
-          (parseFloat(item.sellPremium) || 0);
+          ((spotAsk + sellPremium) / OUNCE) *
+            AED *
+            weightValue *
+            purity +
+          sellCharge;
 
         return {
           group: item.group, // IMPORTANT
